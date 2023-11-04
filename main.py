@@ -39,13 +39,15 @@ def generate_function(function):
     return (name, offset, function_pointer, function_decl)
 
 def generate_header_files(path, output_directory):
+    print("Creating header files ...")
     il2cppdumper_helper_h = open(output_directory + "\Il2CppDumper_helper.hpp", "w")
     offsets_h = open(output_directory + "\offsets.hpp", "w")
 
     il2cppdumper_helper_h.write(
-        "#include \"il2cpp.h\"\n#include \"offsets.hpp\"\n\nnamespace Il2CppDumper {\n\t// Pointer to GameAssembly.dll base\n\tuintptr_t GameAssembly = (uintptr_t)GetModuleHandle(TEXT(\"GameAssembly.dll\"));")
-    offsets_h.write("namespace Il2CppDumper {\n\tnamespace offsets {")
+        "#include \"il2cpp.h\"\n#include \"offsets.hpp\"\n\nnamespace Il2CppDumper {\n\t// Pointer to GameAssembly.dll base\n\tconst std::ptrdiff_t GameAssembly = reinterpret_cast<std::ptrdiff_t>(GetModuleHandle(TEXT(\"GameAssembly.dll\")));")
+    offsets_h.write("#include <cstddef>\n\nnamespace Il2CppDumper {\n\tnamespace offsets {")
 
+    print("Parsing function signatures ...")
     with open(path, "r") as script:
         raw = script.read()
         ScriptMethods = json.loads(raw)["ScriptMethod"]
@@ -54,7 +56,7 @@ def generate_header_files(path, output_directory):
                 function)
             il2cppdumper_helper_h.write(
                 f"\n\t// {function['Name']}\n\t{function_pointer}\n\t{function_decl}")
-            offsets_h.write(f"\n\t\tuintptr_t {name} = (uintptr_t){offset};")
+            offsets_h.write(f"\n\t\tconstexpr std::ptrdiff_t {name} = {offset};")
 
     il2cppdumper_helper_h.write("\n}")
     offsets_h.write("\n\t}\n}")
@@ -77,8 +79,8 @@ def main():
 
     generate_header_files(args.path, args.output)
 
-    print(f"Took {time.time() - start}s to complete.")
-
+    print(f"Generated header files in directory: {args.output}.")
+    print(f"Time taken: {round(time.time() - start, 2)} seconds.")
 
 if __name__ == "__main__":
     main()
