@@ -18,7 +18,6 @@ Clone this repository and execute `python main.py` in a command line window.
 
 ```C++
 #include "Il2CppDumper_helper.hpp"
-#include <iostream>
 
 int main()
 {
