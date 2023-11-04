@@ -50,8 +50,8 @@ def generate_header_files(path, output_directory):
     print("Parsing function signatures ...")
     with open(path, "r") as script:
         raw = script.read()
-        ScriptMethods = json.loads(raw)["ScriptMethod"]
-        for function in ScriptMethods:
+        script_methods = json.loads(raw)["ScriptMethod"]
+        for function in script_methods:
             name, offset, function_pointer, function_decl = generate_function(
                 function)
             il2cppdumper_helper_h.write(
