@@ -39,12 +39,12 @@ def generate_function(function):
     return (name, offset, function_pointer, function_decl)
 
 def generate_header_files(path, output_directory):
-    il2cpp_helper_h = open(output_directory + "\il2cpp_helper.hpp", "w")
+    il2cppdumper_helper_h = open(output_directory + "\Il2CppDumper_helper.hpp", "w")
     offsets_h = open(output_directory + "\offsets.hpp", "w")
 
-    il2cpp_helper_h.write(
-        "#include \"il2cpp.h\"\n#include \"offsets.hpp\"\n\nnamespace il2cppdumper {\n\t// Pointer to GameAssembly.dll base\n\tuintptr_t GameAssembly = (uintptr_t)GetModuleHandle(TEXT(\"GameAssembly.dll\"));")
-    offsets_h.write("\nnamespace il2cppdumper {\n\tnamespace offsets {")
+    il2cppdumper_helper_h.write(
+        "#include \"il2cpp.h\"\n#include \"offsets.hpp\"\n\nnamespace Il2CppDumper {\n\t// Pointer to GameAssembly.dll base\n\tuintptr_t GameAssembly = (uintptr_t)GetModuleHandle(TEXT(\"GameAssembly.dll\"));")
+    offsets_h.write("namespace Il2CppDumper {\n\tnamespace offsets {")
 
     with open(path, "r") as script:
         raw = script.read()
@@ -52,15 +52,14 @@ def generate_header_files(path, output_directory):
         for function in ScriptMethods:
             name, offset, function_pointer, function_decl = generate_function(
                 function)
-            il2cpp_helper_h.write(
+            il2cppdumper_helper_h.write(
                 f"\n\t// {function['Name']}\n\t{function_pointer}\n\t{function_decl}")
             offsets_h.write(f"\n\t\tuintptr_t {name} = (uintptr_t){offset};")
 
-    il2cpp_helper_h.write("\n}")
-    offsets_h.write("\n\t}")
-    offsets_h.write("\n}")
+    il2cppdumper_helper_h.write("\n}")
+    offsets_h.write("\n\t}\n}")
 
-    il2cpp_helper_h.close()
+    il2cppdumper_helper_h.close()
     offsets_h.close()
 
 def main():
