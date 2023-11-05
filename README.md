@@ -25,7 +25,7 @@ int main()
   const char* string = "Hello World!";
   System_String_o* system_string_object = Il2CppDumper::System_String__CreateString(NULL, (int8_t*)string, 0, strlen(str), NULL);
 
-  void* pLoadScene = reinterpret_cast<void*>(GameAssembly + Il2CppDumper::offsets::UnityEngine_SceneManagement_SceneManager__LoadScene); // Pointer to unity LoadScene function using generated offsets.
+  void* pLoadScene = reinterpret_cast<void*>(Il2CppDumper::GameAssembly + Il2CppDumper::offsets::UnityEngine_SceneManagement_SceneManager__LoadScene); // Pointer to unity LoadScene function using generated offsets.
 
   return 0;
 }
